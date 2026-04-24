@@ -1,0 +1,44 @@
+name: Daily Service Outreach (GenCorders Official)
+
+on:
+  schedule:
+    - cron: '30 2 * * *' # 2:30 AM UTC
+  workflow_dispatch: # Allows manual run
+
+jobs:
+  run-outreach:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: 1. Generate Global Leads
+        run: python global_lead_engine.py
+        env:
+          APOLLO_API_KEY: ${{ secrets.APOLLO_API_KEY }}
+
+      - name: 2. Audit Websites for Technical Flaws
+        run: python service_auditor.py
+
+      - name: 3. Send Automated Cold Emails (Sleep-Mode)
+        run: python automated_cold_mailer.py
+        env:
+          SMTP_USER: "gencordersofficial@gmail.com"
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+
+      - name: Commit & Push Results
+        run: |
+          git config --global user.name 'GenCorders Bot'
+          git config --global user.email 'gencordersofficial@gmail.com'
+          git add *.csv
+          git commit -m "Results for $(date +'%Y-%m-%d')"
+          git push

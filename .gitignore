@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Leads & Logs (Sensitive Business Data)
+leads.csv
+sent_log.csv
+audit_results.csv
+*.pdf
+
+# OS junk
+.DS_Store
+Thumbs.db
