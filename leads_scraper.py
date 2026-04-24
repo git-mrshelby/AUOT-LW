@@ -38,22 +38,24 @@ def extract_emails(text):
 
     garbage_keywords = [
         'sentry.io', 'wixpress', 'wix.com', 'example.com', 'domain.com',
-        'yourwebsite.com', 'yell.com', 'yelp.com', 'yellowpages', 'bbb.org',
+        'yourwebsite.com', 'yell.com', 'yelp', 'yellowpages', 'bbb.org',
         'manta.com', 'apple.com', 'google.com', 'amazon.com', 'sentry', '@12x', '@3x',
         'bytescraper.com', 'teco.com.ar', 'enacom.gob.ar', 'bark.com', 'fresha.com',
         'cloudflare.com', 'wordpress.com', 'squarespace.com', 'godaddy.com',
-        'microsoft.com', 'outlook.com/signup', 'github.com'
+        'microsoft.com', 'outlook.com/signup', 'github.com', 'sitedomain.com'
     ]
 
     dummy_patterns = [
         'example', 'sample', 'test', 'yourname', 'email@', 'domain', 'contact@website',
         'user@', 'admin@address', 'info@address', 'someone@', 'name@', 'mail@mail',
-        'placeholder', 'changeme', 'noreply', 'no-reply', 'donotreply'
+        'placeholder', 'changeme', 'noreply', 'no-reply', 'donotreply', 'admin@example'
     ]
 
     for e in emails:
         e = e.lower().strip()
         if e.endswith(('.png', '.jpg', '.jpeg', '.gif', '.css', '.js', '.svg', '.webp', '.pdf', '.woff', '.woff2', '.ttf')):
+            continue
+        if e.endswith(('.gov', '.gov.za', '.edu', '.edu.za', '.ac.za', '.mil', '.org', '.org.za', '.za.com', '.za.net')):
             continue
         if any(bad in e for bad in garbage_keywords) or any(dummy in e for dummy in dummy_patterns):
             continue
