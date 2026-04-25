@@ -276,6 +276,14 @@ def run_global_outreach_cycle():
                 print(f"  [SKIP] Already contacted: {email}")
                 continue
 
+            email_domain = email.split('@')[1] if '@' in email else ""
+            
+            # --- ONLY ALLOW PUBLIC EMAIL PROVIDERS ---
+            allowed_providers = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'aol.com', 'icloud.com', 'ymail.com', 'live.com', 'msn.com', 'proton.me', 'protonmail.com']
+            if not any(email_domain == provider for provider in allowed_providers):
+                print(f"  [SKIP] Custom domain email: {email}")
+                continue
+
             # --- ENHANCED TRASH FILTER ---
             spam_platforms = [
                 '@sentry', 'wix.', 'domain.', 'example.', 'test@', 'support@',
@@ -310,33 +318,20 @@ def run_global_outreach_cycle():
                 continue
 
             # --- CROSS-CONFIRMATION (STRICT) ---
-            domain = urlparse(lead.get('Website', '')).netloc.replace('www.', '').lower()
             company_words = [w.lower() for w in lead['Company'].replace(',', '').replace('.', '').split() if len(w) > 2]
 
             is_confirmed = False
             generic_handles = ['enquiries', 'sales', 'info', 'contact', 'admin', 'office', 'support', 'hello', 'mail', 'team']
             email_handle = email.split('@')[0].lower()
             
-            # 1. Pro Email: email domain matches website domain
-            if domain and domain != '' and domain in email_domain:
+            # Generic handles (highly reliable when found via directory/social)
+            if any(handle in email_handle for handle in generic_handles):
                 is_confirmed = True
 
-            # 2. Generic handles (highly reliable when found via directory/social)
-            elif any(handle in email_handle for handle in generic_handles):
-                is_confirmed = True
-
-            # 3. Gmail/Yahoo/Hotmail: email handle should contain part of company name
-            elif any(provider in email_domain for provider in ['gmail', 'yahoo', 'hotmail', 'outlook', 'aol']):
+            # Public email providers: email handle should contain part of company name
+            else:
                 for word in company_words:
                     if word in email_handle:
-                        is_confirmed = True
-                        break
-
-            # 4. Pro domain (.ie, .co.uk, etc.): must still match company name
-            elif email_domain:
-                domain_name = email_domain.split('.')[0] 
-                for word in company_words:
-                    if word in domain_name or domain_name in word or word in email_handle:
                         is_confirmed = True
                         break
 
