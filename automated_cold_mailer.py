@@ -51,7 +51,7 @@ def send_gen_corders_offer(business_name, owner_email, niche, competitor_site):
         {custom_logo}
         <div style="float: left;">
             <span style="font-size: 1.0em; color: #333;">Best Regards,</span><br>
-            <span style="font-size: 1.2em; font-weight: bold; color: #000;">Salman Haider {blue_badge}</span><br>
+            <span style="font-size: 1.2em; font-weight: bold; color: #000;">S . Mohsin {blue_badge}</span><br>
             <span style="font-size: 0.85em; color: #7f8c8d;">Lead Automation Engineer</span><br>
             <strong style="color: #1a1a1a; font-size: 1.0em;">Gen Coders Pvt Ltd {blue_badge}</strong>
         </div>
